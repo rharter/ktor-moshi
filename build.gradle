@@ -1,0 +1,46 @@
+buildscript {
+
+  ext.versions = [
+      'coroutines': '0.25.0',
+      'kotlin': '1.2.61',
+      'ktor': '0.9.4',
+      'moshi': '1.6.0'
+  ]
+
+  ext.deps = [
+      'kotlin': [
+          'coroutines': "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.coroutines}",
+          'stdlib': "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${versions.kotlin}",
+      ],
+      'ktor': [
+          'server': "io.ktor:ktor-server-core:${versions.ktor}",
+          'netty': "io.ktor:ktor-server-netty:${versions.ktor}",
+          'test': "io.ktor:ktor-server-test-host:${versions.ktor}",
+      ],
+      'logback': "ch.qos.logback:logback-classic:1.2.1",
+      'junit': 'junit:junit:4.12',
+      'truth': "com.google.truth:truth:0.39",
+      'moshi': [
+          'adapters': "com.squareup.moshi:moshi-adapters:${versions.moshi}",
+          'client': "com.squareup.moshi:moshi:${versions.moshi}",
+          'kotlin': "com.squareup.moshi:moshi-kotlin:${versions.moshi}",
+          'codegen': "com.squareup.moshi:moshi-kotlin-codegen:${versions.moshi}"
+      ]
+  ]
+
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
+    classpath 'org.junit.platform:junit-platform-gradle-plugin:1.1.0'
+  }
+}
+
+allprojects {
+  repositories {
+    jcenter()
+    mavenCentral()
+    maven { url "https://dl.bintray.com/kotlin/ktor" }
+  }
+}
