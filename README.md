@@ -19,6 +19,25 @@ install(ContentNegotation) {
 
 Inside the `moshi` block you have access to the [Moshi.Builder](http://square.github.io/moshi/1.x/moshi/com/squareup/moshi/Moshi.Builder.html), which you can configure as needed for your application. 
 
+Once the Moshi converter is installed you use it like you would any other ContentNegotiation converter, by using `call.respond(myObject)` and `call.receive<MyType>()`. 
+
+```kotlin
+routing {
+  get("/") {
+    // Simply pass an object to `call.respond` and it will be
+    // converted to JSON if the client accepts `application/json`
+    val myResponseObject = ...
+    call.respond(myResponseObject)
+  }
+  post("/") {
+    // Use `call.receive` to get the JSON request as a
+    // deserialized object.
+    val request = call.receive<MyRequestObject>()
+    ...
+  }
+}
+```
+
 ## Download
 
 Add a gradle dependency to your project:
