@@ -19,6 +19,7 @@ import io.ktor.server.testing.handleRequest
 import io.ktor.server.testing.setBody
 import io.ktor.server.testing.withTestApplication
 import org.junit.Test
+import kotlin.test.fail
 
 class MoshiConverterTest {
 

@@ -25,7 +25,8 @@ buildscript {
           'client': "com.squareup.moshi:moshi:${versions.moshi}",
           'kotlin': "com.squareup.moshi:moshi-kotlin:${versions.moshi}",
           'codegen': "com.squareup.moshi:moshi-kotlin-codegen:${versions.moshi}"
-      ]
+      ],
+      'okio': "com.squareup.okio:okio:2.0.0"
   ]
 
   repositories {

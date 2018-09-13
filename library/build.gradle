@@ -7,6 +7,7 @@ dependencies {
   compile deps.kotlin.stdlib
   compile deps.ktor.server
   compile deps.moshi.kotlin
+  compile deps.okio
 
   testCompile deps.junit
   testCompile deps.truth

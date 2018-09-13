@@ -9,7 +9,7 @@ This feature provides a [ContentNegotiation](http://ktor.io/servers/features/con
 Install the feature by registering a JSON content converter using Moshi:
 
 ```kotlin
-install(ContentNegotation) {
+install(ContentNegotiation) {
   moshi {
     // Configure the Moshi.Builder here.
     add(Date::class.java, Rfc3339DateJsonAdapter())
@@ -18,6 +18,14 @@ install(ContentNegotation) {
 ```
 
 Inside the `moshi` block you have access to the [Moshi.Builder](http://square.github.io/moshi/1.x/moshi/com/squareup/moshi/Moshi.Builder.html), which you can configure as needed for your application. 
+
+If you already have an instance of Moshi you can simply provide that and it will be used, instead of creating a new one.
+
+```kotlin
+install(ContentNegotiation) {
+  moshi(myInjectedMoshi)
+}
+```
 
 Once the Moshi converter is installed you use it like you would any other ContentNegotiation converter, by using `call.respond(myObject)` and `call.receive<MyType>()`. 
 

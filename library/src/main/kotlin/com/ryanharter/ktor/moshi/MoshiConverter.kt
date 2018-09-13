@@ -14,12 +14,14 @@ import io.ktor.util.pipeline.PipelineContext
 import kotlinx.coroutines.experimental.io.ByteReadChannel
 import kotlinx.coroutines.experimental.io.jvm.javaio.toInputStream
 import okio.Okio
+import okio.buffer
+import okio.source
 
 class MoshiConverter(private val moshi: Moshi = Moshi.Builder().build()) : ContentConverter {
   override suspend fun convertForReceive(context: PipelineContext<ApplicationReceiveRequest, ApplicationCall>): Any? {
     val request = context.subject
     val channel = request.value as? ByteReadChannel ?: return null
-    val source = Okio.buffer(Okio.source(channel.toInputStream()))
+    val source = channel.toInputStream().source().buffer()
     val type = request.type
     return moshi.adapter(type.javaObjectType).fromJson(source)
   }
@@ -29,6 +31,19 @@ class MoshiConverter(private val moshi: Moshi = Moshi.Builder().build()) : Conte
   }
 }
 
+/**
+ * Registers the supplied Moshi instance as a content converter for `application/json`
+ * data.
+ */
+fun ContentNegotiation.Configuration.moshi(moshi: Moshi = Moshi.Builder().build()) {
+  val converter = MoshiConverter(moshi)
+  register(ContentType.Application.Json, converter)
+}
+
+/**
+ * Creates a new Moshi instance and registers it as a content converter for
+ * `application/json` data.  The supplied block is used to configure the builder.
+ */
 fun ContentNegotiation.Configuration.moshi(block: Moshi.Builder.() -> Unit) {
   val builder = Moshi.Builder()
   builder.apply(block)
