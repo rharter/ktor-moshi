@@ -1,8 +1,6 @@
 apply plugin: 'kotlin'
 apply plugin: 'kotlin-kapt'
 
-kotlin.experimental.coroutines 'enable'
-
 dependencies {
   compile deps.kotlin.stdlib
   compile deps.ktor.server
@@ -11,7 +9,6 @@ dependencies {
 
   testCompile deps.junit
   testCompile deps.truth
-  testCompile deps.kotlin.coroutines
   testCompile deps.kotlin.stdlib
   testCompile deps.ktor.test
   kaptTest deps.moshi.codegen
