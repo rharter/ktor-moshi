@@ -51,7 +51,7 @@ routing {
 Add a gradle dependency to your project:
 
 ```groovy
-compile 'com.ryanharter.ktor:ktor-moshi:1.0.0'
+compile 'com.ryanharter.ktor:ktor-moshi:1.0.1'
 ```
 
 Snapshots of the latest development version are available in [Sonatype's `snapshots` repository](https://oss.sonatype.org/content/repositories/snapshots/).
