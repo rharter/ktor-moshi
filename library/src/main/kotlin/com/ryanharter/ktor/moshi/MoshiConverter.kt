@@ -11,8 +11,10 @@ import io.ktor.http.content.TextContent
 import io.ktor.http.withCharset
 import io.ktor.request.ApplicationReceiveRequest
 import io.ktor.util.pipeline.PipelineContext
-import kotlinx.coroutines.io.ByteReadChannel
-import kotlinx.coroutines.io.jvm.javaio.toInputStream
+import io.ktor.utils.io.ByteReadChannel
+import io.ktor.utils.io.jvm.javaio.toInputStream
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import okio.buffer
 import okio.source
 
@@ -22,7 +24,9 @@ class MoshiConverter(private val moshi: Moshi = Moshi.Builder().build()) : Conte
     val channel = request.value as? ByteReadChannel ?: return null
     val source = channel.toInputStream().source().buffer()
     val type = request.type
-    return moshi.adapter(type.javaObjectType).fromJson(source)
+    return withContext(Dispatchers.IO) {
+      moshi.adapter(type.javaObjectType).fromJson(source)
+    }
   }
 
   override suspend fun convertForSend(context: PipelineContext<Any, ApplicationCall>, contentType: ContentType, value: Any): Any? {
