@@ -2,6 +2,7 @@ package com.ryanharter.ktor.moshi
 
 import com.google.common.truth.Truth.assertThat
 import com.squareup.moshi.JsonClass
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.features.ContentNegotiation
@@ -25,7 +26,9 @@ class MoshiConverterTest {
 
   @Test fun reflection() = withTestApplication {
     application.install(ContentNegotiation) {
-      moshi { }
+      moshi {
+        this.add(KotlinJsonAdapterFactory())
+      }
     }
     application.routing {
       val foo = Foo(id = 42, name = "Foosius")
