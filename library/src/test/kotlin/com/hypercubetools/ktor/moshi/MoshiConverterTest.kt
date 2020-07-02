@@ -1,4 +1,4 @@
-package com.ryanharter.ktor.moshi
+package com.hypercubetools.ktor.moshi
 
 import com.google.common.truth.Truth.assertThat
 import com.squareup.moshi.JsonClass

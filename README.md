@@ -51,25 +51,12 @@ routing {
 Add a gradle dependency to your project:
 
 ```groovy
-compile 'com.ryanharter.ktor:ktor-moshi:1.0.1'
+implementation 'com.hypercubetools:ktor-moshi-server:1.0.1'
 ```
 
-Snapshots of the latest development version are available in [Sonatype's `snapshots` repository](https://oss.sonatype.org/content/repositories/snapshots/).
+## Fork
 
-## License
+[Ryan Harter's `ktor-moshi`][old_repo] is the original source for this project. The project has been expanded since it's
+initial state.
 
-```
-Copyright 2018 Ryan Harter.
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-   http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-```
+[old_repo]: https://github.com/rharter/ktor-moshi

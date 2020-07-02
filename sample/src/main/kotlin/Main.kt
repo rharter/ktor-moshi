@@ -1,4 +1,4 @@
-import com.ryanharter.ktor.moshi.moshi
+import com.hypercubetools.ktor.moshi.moshi
 import com.squareup.moshi.JsonClass
 import com.squareup.moshi.adapters.Rfc3339DateJsonAdapter
 import io.ktor.application.call

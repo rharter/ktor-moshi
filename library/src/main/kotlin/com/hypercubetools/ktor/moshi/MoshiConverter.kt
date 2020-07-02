@@ -1,4 +1,4 @@
-package com.ryanharter.ktor.moshi
+package com.hypercubetools.ktor.moshi
 
 import com.squareup.moshi.Moshi
 import io.ktor.application.ApplicationCall
