@@ -3,19 +3,19 @@
 package com.ryanharter.ktor.moshi
 
 import com.squareup.moshi.Moshi
+import io.ktor.content.TextContent
 import io.ktor.http.ContentType
-import io.ktor.http.content.TextContent
 import io.ktor.http.withCharset
 import io.ktor.serialization.ContentConverter
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiationConfig
 import io.ktor.util.reflect.TypeInfo
 import io.ktor.utils.io.ByteReadChannel
-import io.ktor.utils.io.charsets.Charset
 import io.ktor.utils.io.jvm.javaio.toInputStream
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okio.buffer
 import okio.source
+import java.nio.charset.Charset
 
 class MoshiConverter(private val moshi: Moshi = Moshi.Builder().build()) : ContentConverter {
     override suspend fun deserialize(charset: Charset, typeInfo: TypeInfo, content: ByteReadChannel): Any? {
@@ -24,12 +24,18 @@ class MoshiConverter(private val moshi: Moshi = Moshi.Builder().build()) : Conte
         }
     }
 
-    override suspend fun serialize(
+    override suspend fun serializeNullable(
         contentType: ContentType,
         charset: Charset,
         typeInfo: TypeInfo,
-        value: Any
-    ) = TextContent(moshi.adapter(value.javaClass).toJson(value), contentType.withCharset(charset))
+        value: Any?
+    ) = TextContent(
+        moshi.adapter(
+            value?.javaClass
+                ?: Any::class.java
+        ).nullSafe().toJson(value),
+        contentType.withCharset(charset)
+    )
 }
 
 /**
