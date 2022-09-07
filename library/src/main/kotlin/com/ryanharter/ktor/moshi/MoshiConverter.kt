@@ -1,51 +1,59 @@
+@file:Suppress("unused")
+
 package com.ryanharter.ktor.moshi
 
 import com.squareup.moshi.Moshi
-import io.ktor.application.ApplicationCall
-import io.ktor.application.call
-import io.ktor.features.ContentConverter
-import io.ktor.features.ContentNegotiation
-import io.ktor.features.suitableCharset
+import io.ktor.content.TextContent
 import io.ktor.http.ContentType
-import io.ktor.http.content.TextContent
 import io.ktor.http.withCharset
-import io.ktor.request.ApplicationReceiveRequest
-import io.ktor.util.pipeline.PipelineContext
-import kotlinx.coroutines.io.ByteReadChannel
-import kotlinx.coroutines.io.jvm.javaio.toInputStream
+import io.ktor.serialization.ContentConverter
+import io.ktor.server.plugins.contentnegotiation.ContentNegotiationConfig
+import io.ktor.util.reflect.TypeInfo
+import io.ktor.utils.io.ByteReadChannel
+import io.ktor.utils.io.jvm.javaio.toInputStream
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import okio.buffer
 import okio.source
+import java.nio.charset.Charset
 
 class MoshiConverter(private val moshi: Moshi = Moshi.Builder().build()) : ContentConverter {
-  override suspend fun convertForReceive(context: PipelineContext<ApplicationReceiveRequest, ApplicationCall>): Any? {
-    val request = context.subject
-    val channel = request.value as? ByteReadChannel ?: return null
-    val source = channel.toInputStream().source().buffer()
-    val type = request.type
-    return moshi.adapter(type.javaObjectType).fromJson(source)
-  }
+    override suspend fun deserialize(charset: Charset, typeInfo: TypeInfo, content: ByteReadChannel): Any? {
+        return withContext(Dispatchers.IO) {
+            moshi.adapter(typeInfo.type.javaObjectType).fromJson(content.toInputStream().source().buffer())
+        }
+    }
 
-  override suspend fun convertForSend(context: PipelineContext<Any, ApplicationCall>, contentType: ContentType, value: Any): Any? {
-    return TextContent(moshi.adapter(value.javaClass).toJson(value), contentType.withCharset(context.call.suitableCharset()))
-  }
+    override suspend fun serializeNullable(
+        contentType: ContentType,
+        charset: Charset,
+        typeInfo: TypeInfo,
+        value: Any?
+    ) = TextContent(
+        moshi.adapter(
+            value?.javaClass
+                ?: Any::class.java
+        ).nullSafe().toJson(value),
+        contentType.withCharset(charset)
+    )
 }
 
 /**
  * Registers the supplied Moshi instance as a content converter for `application/json`
  * data.
  */
-fun ContentNegotiation.Configuration.moshi(moshi: Moshi = Moshi.Builder().build()) {
-  val converter = MoshiConverter(moshi)
-  register(ContentType.Application.Json, converter)
+fun ContentNegotiationConfig.moshi(moshi: Moshi = Moshi.Builder().build()) {
+    val converter = MoshiConverter(moshi)
+    register(ContentType.Application.Json, converter)
 }
 
 /**
  * Creates a new Moshi instance and registers it as a content converter for
  * `application/json` data.  The supplied block is used to configure the builder.
  */
-fun ContentNegotiation.Configuration.moshi(block: Moshi.Builder.() -> Unit) {
-  val builder = Moshi.Builder()
-  builder.apply(block)
-  val converter = MoshiConverter(builder.build())
-  register(ContentType.Application.Json, converter)
+fun ContentNegotiationConfig.moshi(block: Moshi.Builder.() -> Unit) {
+    val builder = Moshi.Builder()
+    builder.apply(block)
+    val converter = MoshiConverter(builder.build())
+    register(ContentType.Application.Json, converter)
 }
