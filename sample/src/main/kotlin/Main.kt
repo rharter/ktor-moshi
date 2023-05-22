@@ -23,7 +23,7 @@ val ratings = mutableListOf(
     Rating("blue", 5.0),
     Rating("green", 3.8),
     Rating("red", 1.5),
-    Rating("blue", 4.4)
+    Rating("blue", 4.4),
 )
 
 fun ratingResponse(color: String?): RatingResponse {

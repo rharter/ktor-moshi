@@ -1,17 +1,20 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.7.10" apply false
-    id("org.jmailen.kotlinter") version "3.11.1" apply false
-    id("com.github.ben-manes.versions") version "0.42.0"
+    kotlin("jvm") version "1.8.21" apply false
+    id("org.jmailen.kotlinter") version "3.14.0" apply false
+    id("com.github.ben-manes.versions") version "0.46.0"
 }
 subprojects {
-    group = "com.github.cs125-illinois"
-    version = "2022.9.0"
+    group = "com.github.cs124-illinois"
+    version = "2023.5.0"
     tasks.withType<KotlinCompile> {
         kotlinOptions {
-            jvmTarget = JavaVersion.VERSION_16.toString()
+            jvmTarget = JavaVersion.VERSION_17.toString()
         }
+    }
+    tasks.withType<JavaCompile> {
+        targetCompatibility = JavaVersion.VERSION_17.toString()
     }
     tasks.withType<Test> {
         enableAssertions = true
@@ -26,7 +29,7 @@ allprojects {
 }
 tasks.dependencyUpdates {
     fun String.isNonStable() = !(
-        listOf("RELEASE", "FINAL", "GA", "JRE").any { toUpperCase().contains(it) }
+        listOf("RELEASE", "FINAL", "GA", "JRE").any { uppercase().contains(it) }
             || "^[0-9,.v-]+(-r)?$".toRegex().matches(this)
         )
     rejectVersionIf { candidate.version.isNonStable() }

@@ -28,13 +28,13 @@ class MoshiConverter(private val moshi: Moshi = Moshi.Builder().build()) : Conte
         contentType: ContentType,
         charset: Charset,
         typeInfo: TypeInfo,
-        value: Any?
+        value: Any?,
     ) = TextContent(
         moshi.adapter(
             value?.javaClass
-                ?: Any::class.java
+                ?: Any::class.java,
         ).nullSafe().toJson(value),
-        contentType.withCharset(charset)
+        contentType.withCharset(charset),
     )
 }
 
